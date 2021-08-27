@@ -28,9 +28,10 @@ export default function Home({ initialItems }) {
       </Head>
 
       <main className={styles.main}>
-        {items.map((item) => {
+        Hello!
+        {/* {items.map((item) => {
           return <h1>{item.name}</h1>;
-        })}
+        })} */}
       </main>
 
       <footer className={styles.footer}>
