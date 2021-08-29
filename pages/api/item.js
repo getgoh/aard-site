@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../utils/prisma";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export default async (req, res) => {
   if (req.method !== "POST") {
@@ -23,18 +23,40 @@ export default async (req, res) => {
     keywords: "unique, glow, magic, bless, held, nolocate, auctioned, v3",
   };
 
+  const itemData = req.body;
+
+  console.log(`ItemData.name: ${itemData.name}`);
+
   // {invheader}1224364921|1|Light|0|3|light|unique, glow, magic, bless, held, nolocate, auctioned, v3|||||||210
   //            objectid|level|itemtype|value|weight|wearloc|flags|owner|│fromclanname|timer|||itemscore
 
   // ### Database should contain unique item names
-
-  console.log(req.body);
-
-  const itemData = req.body;
-
-  const savedItem = await prisma.item.create({
-    data: itemData,
+  const itemCheck = await prisma.item.findFirst({
+    where: {
+      name: itemData.name,
+    },
   });
 
-  res.json(savedItem);
+  // item does not exist, can safely insert to database
+  if (itemCheck === null) {
+    // get type
+    // const wearloc = await prisma.wearLoc.findFirst({
+    //   where: {
+    //     location: itemData.wearloc,
+    //   },
+    // });
+
+    // if (wearloc === null) {
+    //   return res.json({ msg: `Type ${itemData.wearloc} not found.` });
+    // }
+
+    const savedItem = await prisma.item.create({
+      data: itemData,
+    });
+    return res.json(savedItem);
+  } else {
+    return res.json({
+      msg: `data not created: item ${itemData.name} already exists in the database.`,
+    });
+  }
 };

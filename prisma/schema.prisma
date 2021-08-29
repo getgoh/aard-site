@@ -18,20 +18,21 @@ model Item {
   flags        String
   value        Int
   weight       Int
-  wearloc      Int
+  wearloc      String
   fromclanname String
   itemscore    Int
   keywords     String
-}
-
-model ItemType {
-  id   Int    @id @default(autoincrement())
-  type String
+  submittedby  String
 }
 
 model WearLoc {
   id       Int    @id @default(autoincrement())
   location String
+}
+
+model ItemType {
+  id   Int    @id @default(autoincrement())
+  type String
 }
 
 // id: "1224364921",
